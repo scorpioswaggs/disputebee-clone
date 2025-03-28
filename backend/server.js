@@ -79,11 +79,9 @@ process.on('uncaughtException', (err) => {
   process.exit(1);
 });
 
-// Start server
-const PORT = process.env.PORT || 5000;
-
 // For Vercel deployment, we don't need to listen on a port
 if (process.env.NODE_ENV !== 'production') {
+  const PORT = process.env.PORT || 5000;
   app.listen(PORT, () => {
     logger.info(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
   });

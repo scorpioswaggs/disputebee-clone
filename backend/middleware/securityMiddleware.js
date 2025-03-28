@@ -21,7 +21,10 @@ const authLimiter = rateLimit({
 
 const securityMiddleware = (app) => {
   // Set security headers
-  app.use(helmet());
+  app.use(helmet({
+    contentSecurityPolicy: false, // Disable CSP for development
+    crossOriginEmbedderPolicy: false // Disable COEP for development
+  }));
 
   // Enable CORS
   app.use(cors({
@@ -42,9 +45,9 @@ const securityMiddleware = (app) => {
 
   // Rate limiting
   app.use('/api/', limiter);
-  app.use('/api/v1/users/register', authLimiter);
-  app.use('/api/v1/users/login', authLimiter);
-  app.use('/api/v1/users/forgot-password', authLimiter);
+  app.use('/api/users/register', authLimiter);
+  app.use('/api/users/login', authLimiter);
+  app.use('/api/users/forgot-password', authLimiter);
 
   // Additional security headers
   app.use((req, res, next) => {

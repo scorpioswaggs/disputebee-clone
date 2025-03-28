@@ -5,6 +5,6 @@
   "installCommand": "npm install",
   "framework": "nextjs",
   "env": {
-    "NEXT_PUBLIC_API_URL": "https://api.credisure.com"
+    "NEXT_PUBLIC_API_URL": "@next_public_api_url"
   }
 } 

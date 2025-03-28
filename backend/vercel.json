@@ -8,7 +8,15 @@
   ],
   "routes": [
     {
-      "src": "/(.*)",
+      "src": "/api/(.*)",
+      "dest": "server.js"
+    },
+    {
+      "src": "/health",
+      "dest": "server.js"
+    },
+    {
+      "src": "/api-docs",
       "dest": "server.js"
     }
   ],
@@ -23,6 +31,7 @@
     "SMTP_USER": "@smtp_user",
     "SMTP_PASSWORD": "@smtp_password",
     "STRIPE_SECRET_KEY": "@stripe_secret_key",
-    "STRIPE_WEBHOOK_SECRET": "@stripe_webhook_secret"
+    "STRIPE_WEBHOOK_SECRET": "@stripe_webhook_secret",
+    "FRONTEND_URL": "@frontend_url"
   }
 } 
