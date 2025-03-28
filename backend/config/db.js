@@ -1,17 +1,39 @@
-const mongoose = require('mongoose');
+const { Sequelize } = require('sequelize');
+const logger = require('./logger');
+
+const sequelize = new Sequelize(process.env.DATABASE_URL, {
+  dialect: 'postgres',
+  logging: (msg) => logger.debug(msg),
+  ssl: process.env.NODE_ENV === 'production' ? {
+    require: true,
+    rejectUnauthorized: false
+  } : false,
+  pool: {
+    max: 5,
+    min: 0,
+    acquire: 30000,
+    idle: 10000
+  }
+});
 
 const connectDB = async () => {
   try {
-    const conn = await mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/credisure', {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    await sequelize.authenticate();
+    logger.info('PostgreSQL Connected Successfully');
     
-    console.log(`MongoDB Connected: ${conn.connection.host}`);
+    // Sync database (in development)
+    if (process.env.NODE_ENV === 'development') {
+      await sequelize.sync({ alter: true });
+      logger.info('Database synced');
+    }
   } catch (error) {
-    console.error(`Error: ${error.message}`);
-    process.exit(1);
+    logger.error('PostgreSQL connection error:', error);
+    // Retry connection after 5 seconds
+    setTimeout(connectDB, 5000);
   }
 };
 
-module.exports = connectDB;
+module.exports = {
+  sequelize,
+  connectDB
+};
